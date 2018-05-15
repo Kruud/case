@@ -70,7 +70,7 @@ redtest = 2000;
 library(randomForest)
 rfmodel = randomForest(SalePrice ~ ., data = cortrain[1:redtrain, ], ntree = 1000, importance = TRUE)
 rfpred = predict(rfmodel, cortest[1:redtest, ])
-rfmse = sqrt(mean((cortest[1:redtest ,1] - rfpred)^2))*(max[2]-min[2])
+rfmse = mean((cortest[1:redtest ,1] - rfpred)^2)*(max[2]-min[2])
 
 library(nnet)
 library(neuralnet)
@@ -80,21 +80,21 @@ f <- as.formula(paste("SalePrice ~", paste(n[!n %in% "SalePrice"], collapse = " 
 #Single layer
 nnmod = nnet(SalePrice ~ ., data = as.data.frame(train), size = 15, maxit = 400, linout = T)
 nnpred = predict(nnmod, test)
-nnmse = sqrt(mean((test[ ,2] - nnpred)^2))*(max[2]-min[2])
+nnmse = mean((test[ ,2] - nnpred)^2)*(max[2]-min[2])
 
 nnmod2 = nnet(f, data = as.data.frame(cortrain[1:redtrain, ]), size = 20, maxit = 500, linout = T)
 nnpred2 = predict(nnmod2, cortest[1:redtest, ])
-nnmse2 = sqrt(mean((cortest[1:redtest ,1] - nnpred2)^2))*(max[2]-min[2])
+nnmse2 = mean((cortest[1:redtest ,1] - nnpred2)^2)*(max[2]-min[2])
 plotnet(nnmod)
 hist(nnpred, breaks = 50)
 
 library(e1071)
 svmmodel = svm(SalePrice ~ ., data=cortrain[1:redtrain, ], type = "eps", kernel = "radial")
 svmpred = predict(svmmodel, cortest[1:redtest, ])
-svmse = sqrt(mean((cortest[1:redtest ,1] - svmpred)^2))*(max[2]-min[2])
+svmse = mean((cortest[1:redtest ,1] - svmpred)^2)*(max[2]-min[2])
 
 #Task 5 & 6: Metric and Results
-fullrmse = sqrt(mean((test[ ,2] - fullpred$fit)^2))*(max[2]-min[2])
+fullrmse = mean((test[ ,2] - fullpred$fit)^2)*(max[2]-min[2])
 summary(fullmodel)
 
 par(mfrow = c(2,1))
